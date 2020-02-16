@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Shop Opening Times</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap"
+			rel="stylesheet"
+		/>
+
+		<style>
+			html {
+				box-sizing: border-box;
+				font-size: 16px;
+			}
+
+			*,
+			*:before,
+			*:after {
+				box-sizing: inherit;
+			}
+
+			body,
+			html {
+				padding: 0;
+				margin: 0;
+			}
+
+			body {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				padding: 35px 15px;
+				font-family: 'Open Sans', sans-serif;
+			}
+
+			.picker {
+				height: 42px;
+				padding: 8px 10px;
+				border: 1px solid rgba(60, 60, 60, 0.3);
+				font-size: 1rem;
+			}
+
+			.info {
+				margin-top: 35px;
+				text-align: center;
+			}
+
+			h1 {
+				font-weight: 400;
+				font-size: 1.65rem;
+			}
+
+			h1 span {
+				display: block;
+				text-transform: uppercase;
+				font-weight: 700;
+				font-size: 2.5rem;
+				color: #e01;
+			}
+
+			h1 span.open {
+				color: #2f1;
+			}
+
+			p .status {
+				color: #2f1;
+			}
+
+			p .status.close {
+				color: #e01;
+			}
+		</style>
+	</head>
+	<body>
+		<input class="picker" />
+
+		<div class="info">
+			<h1>The shop is <span id="shop-status"></span></h1>
+
+			<p>
+				The shop will
+				<span id="shop-next-status" class="status close"></span>
+				<span id="shop-next-date"></span>
+			</p>
+		</div>
+
+		<script src="index.js"></script>
+	</body>
+</html>
