@@ -40,7 +40,7 @@ const times =  {
     },
 
     'Sunday' : {  // Closed on Weekends
-
+        
     }
 };
 

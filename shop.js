@@ -15,11 +15,13 @@ export default class Shop {
         return date.split('-').reverse().join('-') + `T${end ? '23:59:59' : '00:00:00'}.000Z`;
     }
 
-    findActiveHoliday(date = new Date()) {
-        date = moment(date).utc();
+    findActiveHoliday(date) {
+        if(!date) {
+            throw Error('You must provide a moment object to this function.')
+        }
 
         return holidays.find(({ start, end, description }) => {
-            start = moment(this.parseDateString(start)).utc();
+            start = moment(this.parseDateString(start)).utc().subtract(1, 'seconds');
             end = moment(this.parseDateString(end, true)).utc();
 
             const withinRange = date.isBetween(start, end);
@@ -52,6 +54,10 @@ export default class Shop {
     }
 
     getDaysNextOpenHours(date) {
+        if(!date) {
+            throw Error('You must provide a moment object to this function.')
+        }
+
         const dayTimes = this.dayHasOpenHours(date);
 
         if(!dayTimes) return false;
@@ -77,7 +83,7 @@ export default class Shop {
         const timePairs = this.getStartEndTimePairs(dayTimes);
         
         return timePairs.find(([start, end]) => {
-            start = moment(this.makeISOStringFromTime(start, date)).utc();
+            start = moment(this.makeISOStringFromTime(start, date)).utc().subtract(1, 'seconds');
             end = moment(this.makeISOStringFromTime(end, date)).utc();
 
             return date.isBetween(start, end);
@@ -94,6 +100,12 @@ export default class Shop {
         return willBeOpen;
     }
 
+    /**
+     *
+     * @param {Date} date
+     * @return {boolean}
+     */
+
     getDaysNextClosedHours(date) {
         const dayTimes = this.dayHasOpenHours(date);
 
@@ -101,11 +113,14 @@ export default class Shop {
 
         const timePairs = this.getStartEndTimePairs(dayTimes);
         
-        return timePairs.find(([start, end]) => {
+        const nextHours = timePairs.find(([start, end]) => {
             end = moment(this.makeISOStringFromTime(end, date)).utc();
 
             return date.isBefore(end);
         });
+        console.log('nex', nextHours)
+
+        return nextHours ? nextHours[1] : false;
     }
 
     /**
@@ -137,7 +152,7 @@ export default class Shop {
      * @return {boolean}
      */
 
-    isClosed(date) {
+    isClosed(date = new Date()) {
         return !this.isOpen(date);
     };
 
@@ -156,9 +171,9 @@ export default class Shop {
 
         let isOpen = this.isOpen(date);
         
-        if(isOpen) return 'The shop is currently open';
+        if(isOpen) return date;
 
-        while(this.findActiveHoliday(date) || !this.getDaysOpenHours(date) && c<9) {
+        while(this.findActiveHoliday(date) || !this.getDaysOpenHours(date)) {
             date = date.add(1, 'days');
             date.set({ h: 0, m: 0 });
         }
@@ -184,13 +199,13 @@ export default class Shop {
 
         if(isClosed) return date;
 
-        while(!this.findActiveHoliday(date) && !this.getDaysNextClosedHours(date) && c< 10) {
+        while(!this.findActiveHoliday(date) && !this.getDaysNextClosedHours(date)) {
             date = date.add(1, 'days');
             date.set({ h: 0, m: 0 });
         }
 
         let nextClosed = this.getDaysNextClosedHours(date);
-        nextClosed = moment(this.makeISOStringFromTime(nextClosed[1], date));
+        nextClosed = moment(this.makeISOStringFromTime(nextClosed, date));
         
         return nextClosed;
     };

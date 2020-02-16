@@ -2,6 +2,7 @@ const flatpickr = require("flatpickr");
 const moment = require('moment');
 
 import Shop from './shop';
+import holidays from './config/holidays.config';
 
 const prettyFormat = 'dddd, Do MMMM YYYY';
 
@@ -12,7 +13,10 @@ const checkIfOpen = (date = new Date()) => {
 	const $status = document.querySelector('#shop-status');
 	const $nextStatus = document.querySelector('#shop-next-status');
 	const $nextDate = document.querySelector('#shop-next-date');
+	const $statusHoliday = document.querySelector('#shop-status-holiday');
 	
+	$statusHoliday.innerText = '';
+
 	if(!open) {
 		$status.innerText = 'closed';
 		$status.classList.remove('open');
@@ -20,6 +24,11 @@ const checkIfOpen = (date = new Date()) => {
 		$nextStatus.classList.remove('close');
 
 		const nextOpen = ShopInstance.nextOpen(date);
+		const holiday = ShopInstance.findActiveHoliday(moment(date).utc());
+
+		if(holiday) {
+			$statusHoliday.innerText = 'for ' + holiday.description;
+		}
 		
 		let day = nextOpen.format(prettyFormat);
 
@@ -36,6 +45,7 @@ const checkIfOpen = (date = new Date()) => {
 		$nextStatus.classList.add('close');
 
 		const nextClosed = ShopInstance.nextClosed(date);
+		const holiday = ShopInstance.findActiveHoliday(nextClosed);
 
 		let day = nextClosed.format(prettyFormat);
 
@@ -46,6 +56,7 @@ const checkIfOpen = (date = new Date()) => {
 		$nextDate.innerText = `${day} at ${nextClosed.format('h:mma')}`;
 	}
 }
+// TODO: Handle timezones properly
 
 document.addEventListener('DOMContentLoaded', () => {
 	checkIfOpen(new Date());

@@ -2,8 +2,8 @@ const holidays = [
 
     {
         'description' : 'New Years Day 2020',
-        'start'       : '16-01-2020',
-        'end'         : '16-01-2020'
+        'start'       : '16-02-2020',
+        'end'         : '16-02-2020'
     },
 
     {
