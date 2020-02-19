@@ -237,7 +237,7 @@ export default class Shop {
         }
         
         let nextOpen = this.getDaysOpenHours(date);
-		nextOpen = moment(this.makeISOStringFromTime(nextOpen[0], date));
+		nextOpen = moment(this.makeISOStringFromTime(nextOpen[0], date)).utc();
         
         return nextOpen;
     };
@@ -263,7 +263,7 @@ export default class Shop {
         }
 
         let nextClosed = this.getDaysNextClosedHours(date);
-        nextClosed = moment(this.makeISOStringFromTime(nextClosed, date));
+        nextClosed = moment(this.makeISOStringFromTime(nextClosed, date)).utc();
         
         return nextClosed;
     };

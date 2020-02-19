@@ -55,7 +55,6 @@ const checkIfOpen = (date = new Date()) => {
 		$nextDate.innerText = `${day} at ${nextClosed.format('h:mma')}`;
 	}
 }
-// TODO: Handle timezones properly
 
 document.addEventListener('DOMContentLoaded', () => {
 	checkIfOpen(new Date());
