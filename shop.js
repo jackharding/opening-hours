@@ -5,15 +5,38 @@ import times from './config/times.config';
 
 export default class Shop {
 
+	/**
+	 * Create an ISO string from hh:mm with either a chosen or arbitrary date
+     *
+     * @param {string} time
+     * @param {string} date
+     * @return {(string|boolean)}
+     */
+
     makeISOStringFromTime(time, date) {
         date = date ? date.format('YYYY-MM-DD') : '2020-01-01';
 
         return `${date}T${time}:00.000Z`;
-    }
+	}
+	
+	/**
+	 * Create an ISO string from DD-MM-YYYY
+     *
+     * @param {string} date
+     * @param {boolean} end
+     * @return {string}
+     */
 
     parseDateString(date, end) {
         return date.split('-').reverse().join('-') + `T${end ? '23:59:59' : '00:00:00'}.000Z`;
-    }
+	}
+	
+	/**
+	 * Find a holiday that's occuring during the given date
+     *
+     * @param {Date} date
+     * @return {(Object|undefined)}
+     */
 
     findActiveHoliday(date) {
         if(!date) {
@@ -28,7 +51,14 @@ export default class Shop {
 
             return withinRange;
         });
-    }
+	}
+	
+	/**
+	 * Split an opening hours object in to pairs of opening/closing times
+     *
+     * @param {Object} dayObject
+     * @return {Array}
+     */
 
     getStartEndTimePairs(dayObject) {
         if(!dayObject) return [];
@@ -44,6 +74,13 @@ export default class Shop {
         }, []);
     }
 
+	/**
+	 * Get the time config object for the given date
+     *
+     * @param {Date} date
+     * @return {(Object|boolean)}
+     */
+
     dayHasOpenHours(date) {
         const currentDay = date.format('dddd');
         const dayTimes = times[currentDay];
@@ -51,7 +88,14 @@ export default class Shop {
         if(!dayTimes || !Object.entries(dayTimes).length) return false;
 
         return dayTimes;
-    }
+	}
+	
+	/**
+	 * Get the next opening hours for the given date
+     *
+     * @param {Date} date
+     * @return {(Array|boolean)}
+     */
 
     getDaysNextOpenHours(date) {
         if(!date) {
@@ -69,7 +113,14 @@ export default class Shop {
 
             return date.isBefore(start);
         });
-    }
+	}
+	
+	/**
+	 * Find opening hours that are occuring during a given date
+     *
+     * @param {Date} date
+     * @return {Array}
+     */
 
     getDaysCurrentOpenHours(date) {
         if(!date) {
@@ -90,6 +141,13 @@ export default class Shop {
         });
     }
 
+	/**
+	 * Get any current or future opening hours for a given date
+     *
+     * @param {Date} date
+     * @return {Array}
+     */
+	
     getDaysOpenHours(date) {
         const isOpen = this.getDaysCurrentOpenHours(date);
 
@@ -101,9 +159,10 @@ export default class Shop {
     }
 
     /**
+	 * Get the next closing hours for the given date
      *
      * @param {Date} date
-     * @return {boolean}
+     * @return {(string|boolean)}
      */
 
     getDaysNextClosedHours(date) {
@@ -118,7 +177,6 @@ export default class Shop {
 
             return date.isBefore(end);
         });
-        console.log('nex', nextHours)
 
         return nextHours ? nextHours[1] : false;
     }
@@ -179,7 +237,7 @@ export default class Shop {
         }
         
         let nextOpen = this.getDaysOpenHours(date);
-        nextOpen = moment(this.makeISOStringFromTime(nextOpen[0], date));
+		nextOpen = moment(this.makeISOStringFromTime(nextOpen[0], date));
         
         return nextOpen;
     };

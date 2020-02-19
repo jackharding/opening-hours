@@ -2,7 +2,6 @@ const flatpickr = require("flatpickr");
 const moment = require('moment');
 
 import Shop from './shop';
-import holidays from './config/holidays.config';
 
 const prettyFormat = 'dddd, Do MMMM YYYY';
 
@@ -69,5 +68,3 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 });
-
-// export default handleSubmit;
